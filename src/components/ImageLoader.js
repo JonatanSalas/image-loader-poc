@@ -6,6 +6,7 @@ import FadeInImage from './FadeInImage';
 
 export default class ImageLoader extends React.Component {
     static propTypes = {
+        preLoader: PropTypes.func,
         imageStyle: PropTypes.object,
         previewStyle: PropTypes.object,
         imageClassName: PropTypes.string,
@@ -36,6 +37,10 @@ export default class ImageLoader extends React.Component {
 
     render() {
         if (this.state.preload && !this.state.image) {
+            if (this.props.preLoader) {
+                return this.props.preLoader();
+            }
+
             return (
                 <BlurImage
                     className={this.props.previewClassName}

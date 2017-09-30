@@ -6,12 +6,12 @@ import FadeInImage from './FadeInImage';
 
 export default class ImageLoader extends React.Component {
     static propTypes = {
-        alt: PropTypes.string.isRequired,
-        title: PropTypes.string.isRequired,
         imageStyle: PropTypes.object,
         previewStyle: PropTypes.object,
         imageClassName: PropTypes.string,
         previewClassName: PropTypes.string,
+        alt: PropTypes.string.isRequired,
+        title: PropTypes.string.isRequired,
         image: PropTypes.string.isRequired,
         preview: PropTypes.string.isRequired,
         preload: PropTypes.bool.isRequired,
@@ -20,7 +20,7 @@ export default class ImageLoader extends React.Component {
     };
 
     static defaultProps = {
-        onLoad: null,
+        onLoad: () => {},
         preload: true,
         delay: 2000
     };
@@ -31,7 +31,7 @@ export default class ImageLoader extends React.Component {
     };
 
     componentDidMount() {
-        setTimeout(() => this.loadImage(), this.props.delay);
+        setTimeout(this.loadImage, this.props.delay);
     }
 
     render() {
@@ -65,15 +65,20 @@ export default class ImageLoader extends React.Component {
     handleLoad = event => {
         this.props.onLoad && this.props.onLoad(event);
 
-        this.setState(prevState => ({ preload: !prevState.preload }))
+        this.setState(prevState => ({
+            preload: !prevState.preload,
+            image: null
+        }));
     };
 
     loadImage = () => {
-        const image = new Image();
+        const img = new Image();
 
-        image.onload = this.handleLoad;
-        image.src = this.props.image;
+        img.onload = this.handleLoad;
+        img.src = this.props.image;
 
-        this.setState(prevState => ({ image }));
+        this.setState(prevState => ({
+            image: img
+        }));
     };
 }
